@@ -18,9 +18,11 @@ public class Projet : MonoBehaviour
 
     public Vector3 seuilBasBlue;
     public Vector3 seuilhautBlue;
-
+    public bool isDrawing = false;
     public Image Level;
+    public GameObject sphere;
 
+    VectorOfVectorOfPoint contours;
     private VideoCapture fluxVideo;
     private Mat image;
     private Mat imageHSV = new Mat();
@@ -51,24 +53,26 @@ public class Projet : MonoBehaviour
 
         //detection de contours
         DrawLimit(imageSeuilBlue, "blue");
-        DrawLimit(imageSeuilLimit, "limit");
-
-        CvInvoke.Imshow("Labirynthe", image);
-        CvInvoke.WaitKey(24);
-
-        //La texture
+        //DrawLimit(imageSeuilLimit, "limit");
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            isDrawing = true;
+        }
+            //La texture
         if (Input.GetKeyDown(KeyCode.A))
         {
             //CvInvoke.CvtColor(image, imageSeuilLimit, ColorConversion.Gray2Bgr);
-            Texture2D tex = new Texture2D(imageSeuilLimit.Width, imageSeuilLimit.Height, TextureFormat.BGRA32, false);
-            Debug.Log(imageSeuilLimit.Width);
-            Debug.Log(imageSeuilLimit.Height);
-            Debug.Log(imageSeuilLimit.Bytes.Length);
-            tex.LoadRawTextureData(imageSeuilLimit.Bytes);
+            Texture2D tex = new Texture2D(fluxVideo.Width, fluxVideo.Height, TextureFormat.BGRA32, false);
+            Mat hh = new Mat();
+            CvInvoke.CvtColor(imageSeuilBlue, hh, ColorConversion.Gray2Bgra);
+            //tex.LoadImage(hh.ToImage<Bgra, byte>().Bytes);
+            tex.LoadRawTextureData(hh.ToImage<Bgra, byte>().Bytes);
             tex.Apply();
-            tex.LoadImage(imageSeuilLimit.Bytes);
             Level.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1.0f);
         }
+
+        CvInvoke.Imshow("image de base", image);
+        CvInvoke.WaitKey(24);
     }
 
 
@@ -104,7 +108,7 @@ public class Projet : MonoBehaviour
 
     void DrawLimit(Image<Gray, byte> imageSeuil,String name)
     {
-        VectorOfVectorOfPoint contours = new VectorOfVectorOfPoint();
+        contours = new VectorOfVectorOfPoint();
         Mat m = new Mat();
         CvInvoke.FindContours(imageSeuil, contours, m, Emgu.CV.CvEnum.RetrType.External, Emgu.CV.CvEnum.ChainApproxMethod.ChainApproxSimple);
         for (int i = 0; i < contours.Size; i++)
@@ -120,6 +124,21 @@ public class Projet : MonoBehaviour
             int y = (int)(moments.M01 / moments.M00);
             CvInvoke.Circle(image, new Point(x, y), 7, new MCvScalar(0, 0, 0), -1);
             CvInvoke.PutText(image, name, new Point(x, y), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.5, new MCvScalar(0, 0, 255), 2);
+        }
+
+        
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (isDrawing)
+        {
+            Debug.Log(contours[0].Size);
+            for (int i = 0; i < contours[0].Size; i++)
+            {
+                Instantiate(sphere, new Vector3(contours[0][i].X, contours[0][i].Y, 0), Quaternion.identity,this.transform);
+            }
+            isDrawing = false;
         }
     }
 }
