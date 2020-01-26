@@ -19,8 +19,6 @@ public class Projet : MonoBehaviour
     public Vector3 seuilBasBlue;
     public Vector3 seuilhautBlue;
     public bool isDrawing = false;
-    public Image Level;
-    public GameObject sphere;
 
     VectorOfVectorOfPoint contours;
     private VideoCapture fluxVideo;
@@ -51,37 +49,42 @@ public class Projet : MonoBehaviour
         var strutElement = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(5, 5), new Point(2, 2));
         CvInvoke.Dilate(imageSeuilLimit, imageSeuilLimit, strutElement, new Point(2, 2), 1, BorderType.Default, new MCvScalar());
 
-        //detection de contours
-        DrawLimit(imageSeuilBlue, "blue");
-        //DrawLimit(imageSeuilLimit, "limit");
+
+        
         if (Input.GetKeyDown(KeyCode.S))
         {
+            //extrude le background pour avoir que les platformes
+            ExtrudeBackGround(image, imageSeuilBlue);
+
+            //creation du sprite
+            gameObject.GetComponent<SpriteRenderer>().sprite = PNG2Sprite.LoadNewSprite("./Assets/test.png", 100.0f);
+            gameObject.AddComponent<PolygonCollider2D>();
+
             isDrawing = true;
         }
             //La texture
         if (Input.GetKeyDown(KeyCode.A))
         {
-            //CvInvoke.CvtColor(image, imageSeuilLimit, ColorConversion.Gray2Bgr);
             Texture2D tex = new Texture2D(fluxVideo.Width, fluxVideo.Height, TextureFormat.BGRA32, false);
             Mat hh = new Mat();
             CvInvoke.CvtColor(imageSeuilBlue, hh, ColorConversion.Gray2Bgra);
             //tex.LoadImage(hh.ToImage<Bgra, byte>().Bytes);
             tex.LoadRawTextureData(hh.ToImage<Bgra, byte>().Bytes);
             tex.Apply();
-            Level.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1.0f);
+            //Level.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1.0f);
         }
-
         CvInvoke.Imshow("image de base", image);
         CvInvoke.WaitKey(24);
     }
 
-
+    //Detruis la fenetre de la camera lorqu'on sort du debug
     private void OnDestroy()
     {
         fluxVideo.Dispose();
         CvInvoke.DestroyAllWindows();
     }
 
+    //plus de FPS
     private void ProcessFrame(object sender, EventArgs e)
     {
         try
@@ -106,6 +109,7 @@ public class Projet : MonoBehaviour
         return imgseuil;
     }
 
+    //fonction pour dessiner les limits des obj et creer leur centroide
     void DrawLimit(Image<Gray, byte> imageSeuil,String name)
     {
         contours = new VectorOfVectorOfPoint();
@@ -124,21 +128,19 @@ public class Projet : MonoBehaviour
             int y = (int)(moments.M01 / moments.M00);
             CvInvoke.Circle(image, new Point(x, y), 7, new MCvScalar(0, 0, 0), -1);
             CvInvoke.PutText(image, name, new Point(x, y), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.5, new MCvScalar(0, 0, 255), 2);
-        }
-
-        
+        } 
     }
 
-    private void OnDrawGizmos()
+    void ExtrudeBackGround(Mat imgToExtrude, Image<Gray, byte> maskImage)
     {
-        if (isDrawing)
-        {
-            Debug.Log(contours[0].Size);
-            for (int i = 0; i < contours[0].Size; i++)
-            {
-                Instantiate(sphere, new Vector3(contours[0][i].X, contours[0][i].Y, 0), Quaternion.identity,this.transform);
-            }
-            isDrawing = false;
-        }
+        Image<Gray, byte> imgInverser = maskImage.InRange(new Gray(0), new Gray(100));
+        VectorOfByte buf = new VectorOfByte();
+        var mask = imgInverser;
+        Mat imageBGRA = new Mat();
+        CvInvoke.CvtColor(imgToExtrude, imageBGRA, ColorConversion.Bgr2Bgra);
+        imageBGRA.SetTo(new MCvScalar(255, 255, 255, 0), mask);
+        CvInvoke.Imencode(".png", imageBGRA, buf);
+        byte[] arr = buf.ToArray();
+        System.IO.File.WriteAllBytes("./Assets/test.png", arr); // creation du PNG
     }
 }
