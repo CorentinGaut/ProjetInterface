@@ -12,13 +12,14 @@ using System.IO; //memory stream
 
 public class Projet : MonoBehaviour
 {
-
+    public Image UiCamera;
     public Vector3 seuilBas;
     public Vector3 seuilhaut;
 
     public Vector3 seuilBasBlue;
     public Vector3 seuilhautBlue;
     public bool isDrawing = false;
+   
 
     VectorOfVectorOfPoint contours;
     private VideoCapture fluxVideo;
@@ -32,7 +33,8 @@ public class Projet : MonoBehaviour
     {
         image = new Mat();
         fluxVideo = new VideoCapture(0, VideoCapture.API.Any);
-        fluxVideo.FlipHorizontal = true;
+        /*fluxVideo.FlipVertical = true;
+        fluxVideo.FlipHorizontal = true;*/
         fluxVideo.ImageGrabbed += ProcessFrame;
     }
 
@@ -73,16 +75,22 @@ public class Projet : MonoBehaviour
             tex.Apply();
             //Level.sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1.0f);
         }
-        CvInvoke.Imshow("image de base", image);
+        //webcam non traité
+        
+        Texture2D tex2 = new Texture2D(fluxVideo.Width, fluxVideo.Height, TextureFormat.BGRA32, false);
+        tex2.LoadRawTextureData(image.ToImage<Bgra, byte>().Bytes);
+        tex2.Apply();
+        UiCamera.sprite = Sprite.Create(tex2, new Rect(0.0f, 0.0f, tex2.width, tex2.height), new Vector2(0.5f, 0.5f), 1.0f);
+        //CvInvoke.Imshow("image de base", image);
         CvInvoke.WaitKey(24);
     }
 
     //Detruis la fenetre de la camera lorqu'on sort du debug
-    private void OnDestroy()
+    /*private void OnDestroy()
     {
         fluxVideo.Dispose();
         CvInvoke.DestroyAllWindows();
-    }
+    }*/
 
     //plus de FPS
     private void ProcessFrame(object sender, EventArgs e)
