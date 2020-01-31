@@ -9,21 +9,12 @@ public class EndLevel : MonoBehaviour
     public bool isLimit;
     public string nameNextLevel;
     public string nameReloadLevel;
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Ball")
         {
+            GameObject.Find("GameManager").GetComponent<GameManager>().End();
             if (isLimit)
             {
                 SceneManager.LoadScene(nameReloadLevel);

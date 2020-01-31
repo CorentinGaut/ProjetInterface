@@ -403,10 +403,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4155562310556987885, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -4.1999817
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634133229631046057, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634133229683187773, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 1.8928833
+      objectReference: {fileID: 0}
     - target: {fileID: 4634133230046693057, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
         type: 3}
       propertyPath: m_Name
       value: Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634133230046693057, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4634133230046693061, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
         type: 3}
@@ -545,6 +565,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7, type: 3}
+--- !u!1 &389831373 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3199696726118262469, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+    type: 3}
+  m_PrefabInstance: {fileID: 254855537}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &523564365
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -661,6 +687,11 @@ PrefabInstance:
       propertyPath: instructionsMenu
       value: 
       objectReference: {fileID: 1589631032}
+    - target: {fileID: 6557460062659549984, guid: 15c6c5448b7927f4ba8efe71a89b3bd1,
+        type: 3}
+      propertyPath: endMenu
+      value: 
+      objectReference: {fileID: 389831373}
     - target: {fileID: 6557460062659549985, guid: 15c6c5448b7927f4ba8efe71a89b3bd1,
         type: 3}
       propertyPath: m_LocalPosition.x

@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -6,6 +9,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject startMenu;
     public GameObject instructionsMenu;
+    public GameObject endMenu;
 
     private void Awake()
     {
@@ -34,6 +38,13 @@ public class GameManager : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.Escape))
                 Instructions();
         }
+        else if (currentDisplay == "End Menu")
+        {
+            if (Input.GetKeyUp(KeyCode.R))
+                SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            if (Input.GetKeyUp(KeyCode.Q))
+                Application.Quit();
+        }
     }
 
     public void Instructions()
@@ -54,21 +65,37 @@ public class GameManager : MonoBehaviour
         currentDisplay = "Start Menu";
     }
 
+    public void End()
+    {
+        DisplayEndMenu();
+        currentDisplay = "End Menu";
+    }
+
+    private void DisplayEndMenu()
+    {
+        instructionsMenu.SetActive(false);
+        startMenu.SetActive(false);
+        endMenu.SetActive(true); ;
+    }
+
     private void DisplayStartMenu()
     {
         instructionsMenu.SetActive(false);
+        endMenu.SetActive(false);
         startMenu.SetActive(true);
     }
 
     private void DisplayInstructionsMenu()
     {
         startMenu.SetActive(false);
+        endMenu.SetActive(false);
         instructionsMenu.SetActive(true);
     }
 
     private void DisplayGame()
     {
         instructionsMenu.SetActive(false);
+        endMenu.SetActive(false);
         startMenu.SetActive(false);
     }
 }
