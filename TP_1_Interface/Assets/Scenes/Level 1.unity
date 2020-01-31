@@ -513,6 +513,36 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4634133230562342640, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.6285916
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634133230562342640, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.3797924
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634133230562342640, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634133230562342640, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634133230562342640, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4634133230562342640, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cc09c0e2c900ef40aeccdd9be1d92f7, type: 3}
 --- !u!1001 &523564365
@@ -527,6 +557,31 @@ PrefabInstance:
       propertyPath: UiCamera
       value: 
       objectReference: {fileID: 191494745}
+    - target: {fileID: 2184296571876730020, guid: a3d6f8b1e267f3d4eac1042085dd446f,
+        type: 3}
+      propertyPath: seuilBasBlue.x
+      value: 84.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184296571876730020, guid: a3d6f8b1e267f3d4eac1042085dd446f,
+        type: 3}
+      propertyPath: seuilBasBlue.y
+      value: 47.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184296571876730020, guid: a3d6f8b1e267f3d4eac1042085dd446f,
+        type: 3}
+      propertyPath: seuilBasBlue.z
+      value: 97.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184296571876730020, guid: a3d6f8b1e267f3d4eac1042085dd446f,
+        type: 3}
+      propertyPath: seuilhautBlue.x
+      value: 114.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2184296571876730020, guid: a3d6f8b1e267f3d4eac1042085dd446f,
+        type: 3}
+      propertyPath: seuilhautBlue.z
+      value: 255
+      objectReference: {fileID: 0}
     - target: {fileID: 2184296571876730021, guid: a3d6f8b1e267f3d4eac1042085dd446f,
         type: 3}
       propertyPath: m_Name

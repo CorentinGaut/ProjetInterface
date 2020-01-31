@@ -23,7 +23,8 @@ public class Projet : MonoBehaviour
 
     VectorOfVectorOfPoint contours;
     private VideoCapture fluxVideo;
-    private Mat image;
+    private Mat imageMat;
+    private Image<Bgra, byte> image;
     private Mat imageHSV = new Mat();
     private Hsv seuilbasHsv;
     private Hsv seuilhautHsv;
@@ -31,7 +32,7 @@ public class Projet : MonoBehaviour
 
     void Start()
     {
-        image = new Mat();
+        imageMat = new Mat();
         fluxVideo = new VideoCapture(0, VideoCapture.API.Any);
         /*fluxVideo.FlipVertical = true;
         fluxVideo.FlipHorizontal = true;*/
@@ -42,10 +43,15 @@ public class Projet : MonoBehaviour
     void Update()
     {
         fluxVideo.Grab();
-
+        image = imageMat.ToImage<Bgra, byte>();
+        
         //converti
         Image<Gray, byte> imageSeuilLimit = Convert(seuilBas, seuilhaut);
         Image<Gray, byte> imageSeuilBlue = Convert(seuilBasBlue, seuilhautBlue);
+
+        //resize        
+        CvInvoke.Resize(image, image, new Size(1280, 720));
+        CvInvoke.Resize(imageSeuilBlue, imageSeuilBlue, new Size(1280, 720));
 
         //dilate pour affiner les trais
         var strutElement = CvInvoke.GetStructuringElement(ElementShape.Rectangle, new Size(5, 5), new Point(2, 2));
@@ -78,10 +84,10 @@ public class Projet : MonoBehaviour
         //webcam non traité
         
         Texture2D tex2 = new Texture2D(fluxVideo.Width, fluxVideo.Height, TextureFormat.BGRA32, false);
-        tex2.LoadRawTextureData(image.ToImage<Bgra, byte>().Bytes);
+        tex2.LoadRawTextureData(imageMat.ToImage<Bgra, byte>().Bytes);
         tex2.Apply();
         UiCamera.sprite = Sprite.Create(tex2, new Rect(0.0f, 0.0f, tex2.width, tex2.height), new Vector2(0.5f, 0.5f), 1.0f);
-        //CvInvoke.Imshow("image de base", image);
+        CvInvoke.Imshow("image de base", imageSeuilBlue);
         CvInvoke.WaitKey(24);
     }
 
@@ -97,7 +103,7 @@ public class Projet : MonoBehaviour
     {
         try
         {
-            fluxVideo.Retrieve(image, 0);
+            fluxVideo.Retrieve(imageMat, 0);
         }
         catch (Exception exception)
         {
@@ -108,7 +114,7 @@ public class Projet : MonoBehaviour
     //converti l'image en noir et blnc pour plus de precision
     Image<Gray, byte> Convert(Vector3 seuilb, Vector3 seuilh)
     {
-        CvInvoke.CvtColor(image, imageHSV, ColorConversion.Bgr2Hsv);
+        CvInvoke.CvtColor(imageMat, imageHSV, ColorConversion.Bgr2Hsv);
         CvInvoke.Blur(imageHSV, imageHSV, new Size(4, 4), new Point(1, 1));
         seuilbasHsv = new Hsv(seuilb.x, seuilb.y, seuilb.z);
         seuilhautHsv = new Hsv(seuilh.x, seuilh.y, seuilh.z);
@@ -128,18 +134,31 @@ public class Projet : MonoBehaviour
             double perimeter = CvInvoke.ArcLength(contours[i], true);
             VectorOfPoint approx = new VectorOfPoint();
             CvInvoke.ApproxPolyDP(contours[i], approx, 0.04 * perimeter, true);
-            CvInvoke.DrawContours(image, contours, i, new MCvScalar(0, 0, 255));
+            CvInvoke.DrawContours(imageMat, contours, i, new MCvScalar(0, 0, 255));
 
             //centroide
             var moments = CvInvoke.Moments(contours[i]);
             int x = (int)(moments.M10 / moments.M00);
             int y = (int)(moments.M01 / moments.M00);
-            CvInvoke.Circle(image, new Point(x, y), 7, new MCvScalar(0, 0, 0), -1);
-            CvInvoke.PutText(image, name, new Point(x, y), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.5, new MCvScalar(0, 0, 255), 2);
+            CvInvoke.Circle(imageMat, new Point(x, y), 7, new MCvScalar(0, 0, 0), -1);
+            CvInvoke.PutText(imageMat, name, new Point(x, y), Emgu.CV.CvEnum.FontFace.HersheySimplex, 0.5, new MCvScalar(0, 0, 255), 2);
         } 
     }
 
     void ExtrudeBackGround(Mat imgToExtrude, Image<Gray, byte> maskImage)
+    {
+        Image<Gray, byte> imgInverser = maskImage.InRange(new Gray(0), new Gray(100));
+        VectorOfByte buf = new VectorOfByte();
+        var mask = imgInverser;
+        Mat imageBGRA = new Mat();
+        CvInvoke.CvtColor(imgToExtrude, imageBGRA, ColorConversion.Bgr2Bgra);
+        imageBGRA.SetTo(new MCvScalar(255, 255, 255, 0), mask);
+        CvInvoke.Imencode(".png", imageBGRA, buf);
+        byte[] arr = buf.ToArray();
+        System.IO.File.WriteAllBytes("./Assets/test.png", arr); // creation du PNG
+    }
+
+    void ExtrudeBackGround(Image<Bgra, byte> imgToExtrude, Image<Gray, byte> maskImage)
     {
         Image<Gray, byte> imgInverser = maskImage.InRange(new Gray(0), new Gray(100));
         VectorOfByte buf = new VectorOfByte();
