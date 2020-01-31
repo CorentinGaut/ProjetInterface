@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,13 +12,37 @@ public class GameManager : MonoBehaviour
         DisplayStartMenu();
     }
 
-    public void Play()
+    private void Update()
+    {
+        CheckInputs();
+    }
+
+    private void CheckInputs()
+    {
+        if (currentDisplay == "Start Menu")
+        {
+            if (Input.GetKeyUp(KeyCode.E))
+                Instructions();
+        }
+        else if (currentDisplay == "Instructions Menu")
+        {
+            if (Input.GetKeyUp(KeyCode.E))
+                Play();
+        }
+        else if (currentDisplay == "Game")
+        {
+            if (Input.GetKeyUp(KeyCode.Escape))
+                Instructions();
+        }
+    }
+
+    public void Instructions()
     {
         DisplayInstructionsMenu();
         currentDisplay = "Instructions Menu";
     }
 
-    public void Continue()
+    public void Play()
     {
         DisplayGame();
         currentDisplay = "Game";
@@ -44,6 +65,7 @@ public class GameManager : MonoBehaviour
         startMenu.SetActive(false);
         instructionsMenu.SetActive(true);
     }
+
     private void DisplayGame()
     {
         instructionsMenu.SetActive(false);
