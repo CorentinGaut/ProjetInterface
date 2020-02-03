@@ -10,4 +10,8 @@ Le but est d'amener la boule jusque la plateforme verte grâce aux plateformes de
 En appuyant sur "G" la boule subit la gravité, elle tombe est en glissant sur les nouvelles
 plateformes doit descendre jusqu'à l'objectif.
 
+La difficulté du jeu réside en le placement correct de la camera face au dessin.
+Pour depasser ce probleme il serait possible de transformer la perspective camera 
+de sorte à ce que le dessin ne soit pas deformé et respecte la taille de la map en jeu.
+
 ------------END-------------
