@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-        DisplayStartMenu();
+        StartMenu();
     }
 
     private void Update()
@@ -59,7 +59,7 @@ public class GameManager : MonoBehaviour
         currentDisplay = "Game";
     }
 
-    public void Menu()
+    public void StartMenu()
     {
         DisplayStartMenu();
         currentDisplay = "Start Menu";

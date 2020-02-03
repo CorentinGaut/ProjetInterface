@@ -66,6 +66,8 @@ public class Projet : MonoBehaviour
 
             //creation du sprite
             gameObject.GetComponent<SpriteRenderer>().sprite = PNG2Sprite.LoadNewSprite("./Assets/test.png", 100.0f);
+            var pc = gameObject.GetComponent<PolygonCollider2D>();
+            Destroy(pc);
             gameObject.AddComponent<PolygonCollider2D>();
 
             isDrawing = true;
@@ -87,6 +89,7 @@ public class Projet : MonoBehaviour
         tex2.LoadRawTextureData(imageMat.ToImage<Bgra, byte>().Bytes);
         tex2.Apply();
         UiCamera.sprite = Sprite.Create(tex2, new Rect(0.0f, 0.0f, tex2.width, tex2.height), new Vector2(0.5f, 0.5f), 1.0f);
+        //CvInvoke.Flip(imageSeuilBlue, imageSeuilBlue, FlipType.Horizontal);
         CvInvoke.Imshow("image de base", imageSeuilBlue);
         CvInvoke.WaitKey(24);
     }

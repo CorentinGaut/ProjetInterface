@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class EndLevel : MonoBehaviour
 {
-    // Start is called before the first frame update
     public bool isLimit;
     public string nameNextLevel;
     public string nameReloadLevel;
@@ -21,6 +20,7 @@ public class EndLevel : MonoBehaviour
             }
             else
             {
+                Debug.Log("Here");
                 SceneManager.LoadScene(nameNextLevel);
             }
         }
